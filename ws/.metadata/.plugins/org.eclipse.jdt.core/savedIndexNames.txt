@@ -1,0 +1,19 @@
+INDEX VERSION 1.134+/home/miguel2/Codigo/EstructuraDatos/ws/.metadata/.plugins/org.eclipse.jdt.core
+3166837021.index
+2489588862.index
+4145326655.index
+2477648404.index
+2684173004.index
+145068929.index
+3693987561.index
+565478500.index
+1811834533.index
+1065825353.index
+1960568108.index
+2534283146.index
+994643703.index
+3904582439.index
+1065000673.index
+2388458353.index
+913663655.index
+3272214238.index

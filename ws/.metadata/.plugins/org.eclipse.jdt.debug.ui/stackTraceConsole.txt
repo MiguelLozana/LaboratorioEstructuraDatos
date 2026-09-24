@@ -1,0 +1,14 @@
+package algorithmics;
+
+public class Algorithms {
+	private static final long SLEEP_TIME = 1;
+
+	public static void doNothing() {
+		try {
+			Thread.sleep(SLEEP_TIME);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
