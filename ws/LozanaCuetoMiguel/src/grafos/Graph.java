@@ -96,4 +96,5 @@ public interface Graph<T> {
      * @return The number of nodes
      */
     int getSize();
+    
 }
