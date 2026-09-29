@@ -1,0 +1,17 @@
+# Compilados y binarios (IGNORAR)
+**/bin/
+build/
+*.class
+
+# Datos temporales del workspace de Eclipse (IGNORAR SIEMPRE)
+**/.metadata/
+
+# Archivos de entorno y SO
+*.log
+.DS_Store
+Thumbs.db
+
+# Configuración de Eclipse (PERMITIR en Git)
+#.classpath
+#.project
+#.settings/
