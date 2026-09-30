@@ -8,8 +8,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	
 	
 	private T[] nodes;
-	private boolean[][] edges;
-	private double[][] weights;
+	private boolean[][] edges; // Matriz de adyacencia
+	private double[][] weights; // Matriz de pesos 
 	private int size;
 	
 
@@ -47,12 +47,17 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		}
 		
 		if (find(element) == -1) {
+			
+			cleanIndex(size);
+			
 			this.nodes[size] = element;
-			for (int i=0; i<size; i++) {
-				edges[i][size] = false;
-				edges[size][i] = false;
-			}
+			
+			
+
+						
+			
 			size++;
+			
 			return true;
 		}
 		return false;
@@ -91,22 +96,38 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		if (nodeIndex == -1){
 			return false;
 		}
-		for (int i = 0; i< size; i++) {
-			edges[nodeIndex][i] = edges [size][i];
-			edges[i][nodeIndex] = edges [i][size];
-			
-			weights[nodeIndex][i] = weights [size][i];
-			weights[i][nodeIndex] = weights [i][size];
-		}
-		nodes[nodeIndex] = nodes[size];
+		int lastIndex = size - 1;
+		
+		if (nodeIndex != lastIndex) {
+	        for (int i = 0; i < size; i++) {
+	            
+	        	edges[nodeIndex][i] = edges[lastIndex][i];
+	            edges[i][nodeIndex] = edges[i][lastIndex];
+	            
+	            weights[nodeIndex][i] = weights[lastIndex][i];
+	            weights[i][nodeIndex] = weights[i][lastIndex];
+	        }
+	        edges[nodeIndex][nodeIndex] = edges[lastIndex][lastIndex];
+	        weights[nodeIndex][nodeIndex] = weights[lastIndex][lastIndex];
+	        
+	        nodes[nodeIndex] = nodes[lastIndex];
+	    }
+		cleanIndex(lastIndex);
 		size--;
 		return true;
 	}
 
 	@Override
 	public boolean removeEdge(T originElement, T destinationElement) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		int originIndex = getValidatedIndexOd(originElement);
+		int destinationIndex = getValidatedIndexOd(destinationElement);
+		
+		if (!edges[originIndex][destinationIndex]) {
+			return false;
+		}
+		edges[originIndex][destinationIndex] = false;
+		return true;
 	}
 	// ===================================
 	//
@@ -216,6 +237,17 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			throw new ElementNotPresentException("ELEMETNO NO ENCONTRADO");
 		}
 		return index;
+	}
+	
+	public void cleanIndex(int index) {
+		for (int i = 0; i < nodes.length; i++) {
+	        edges[index][i] = false;
+	        edges[i][index] = false;
+	        weights[index][i] = 0.0;
+	        weights[i][index] = 0.0;
+	    }
+		
+	    nodes[index] = null;
 	}
 	
 	
