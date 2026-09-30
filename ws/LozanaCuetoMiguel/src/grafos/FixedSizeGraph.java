@@ -4,13 +4,20 @@ import grafos.exceptions.ElementNotPresentException;
 import grafos.exceptions.FullStructureException;
 
 public class FixedSizeGraph<T> implements Graph<T> {
+	
+	
+	
 	private T[] nodes;
 	private boolean[][] edges;
 	private double[][] weights;
 	private int size;
 	
 
-	
+	// ===================================
+	//
+	//  CONSTRUCTOR
+	//
+	// ===================================
 	
 	@SuppressWarnings("unchecked")
 	public FixedSizeGraph( int capacity) {
@@ -23,28 +30,15 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		size = 0;
 	}
 	
-	/*
-	 * Recorre el vector de nodos mediante el indice hasta que encuetra y devuevle su indice
-	 * @return int indice del elemento o -1 en caso de que no lo encuentre
-	 */
-	public int find(T element) {
-		for (int index = 0; index< this.size; index++) {
-			if (nodes[index].equals(element)) {
-				return index;
-			}
-		}
-		return -1;
-	}
 	
-	/**
-     * Adds a node to the graph.
-     *
-     * @param element The element to add as a node
-     * @return {@code true} if the node was successfully added, {@code false} if the
-     * node already exists
-     * @throws NullPointerException   if the element is null
-     * @throws FullStructureException if the graph has reached its maximum capacity
-     */
+	
+	// ===================================
+	//
+	//  ANADIR
+	//
+	// ===================================
+		
+	
 	@Override
 	public boolean addNode(T element) {
 		checkNull(element);
@@ -54,7 +48,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		
 		if (find(element) == -1) {
 			this.nodes[size] = element;
-			for (int i=0; i>size; i++) {
+			for (int i=0; i<size; i++) {
 				edges[i][size] = false;
 				edges[size][i] = false;
 			}
@@ -63,31 +57,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		}
 		return false;
 	}
-	@Override
-	public boolean removeNode(T element) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean existsNode(T element) {
-		checkNull(element);
-		
-		return find(element) != -1;
-	}
 	
-	/**
-     * Adds a directed edge with a specified weight between two nodes.
-     *
-     * @param originElement      The origin node of the edge
-     * @param destinationElement The destination node of the edge
-     * @param weight             The weight of the edge
-     * @return {@code true} if the edge was successfully added, {@code false} if the
-     * edge already exists
-     * @throws NullPointerException       if either element is null
-     * @throws IllegalArgumentException   if the weight is less than or equal to 0
-     * @throws ElementNotPresentException if either node doesn't exist in the graph
-     */
+	
 	@Override
 	public boolean addEdge(T originElement, T destinationElement, double weight) {
 		if (weight <= 0) {
@@ -105,11 +76,48 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		}
 		return false;
 	}
+	
+	// ===================================
+	//
+	//  ELIMINAR
+	//
+	// ===================================
+	
+	@Override
+	public boolean removeNode(T element) {
+		checkNull(element);
+		int nodeIndex = find(element);
+		
+		if (nodeIndex == -1){
+			return false;
+		}
+		for (int i = 0; i< size; i++) {
+			edges[nodeIndex][i] = edges [size][i];
+			edges[i][nodeIndex] = edges [i][size];
+			
+			weights[nodeIndex][i] = weights [size][i];
+			weights[i][nodeIndex] = weights [i][size];
+		}
+		nodes[nodeIndex] = nodes[size];
+		size--;
+		return true;
+	}
 
 	@Override
 	public boolean removeEdge(T originElement, T destinationElement) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	// ===================================
+	//
+	//  COMPORBAR EXISTENCIA y BUSCAR
+	//
+	// ===================================
+	@Override
+	public boolean existsNode(T element) {
+		checkNull(element);
+		
+		return find(element) != -1;
 	}
 
 	@Override
@@ -127,6 +135,23 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		return this.edges[originIndex][destinationIndex];
 	}
 
+	/*
+	 * Recorre el vector de nodos mediante el indice hasta que encuetra y devuevle su indice
+	 * @return int indice del elemento o -1 en caso de que no lo encuentre
+	 */
+	public int find(T element) {
+		for (int index = 0; index< this.size; index++) {
+			if (nodes[index].equals(element)) {
+				return index;
+			}
+		}
+		return -1;
+	}
+	// ===================================
+	//
+	//  OBTENER DATOS
+	//
+	// ===================================
 	@Override
 	public double getWeight(T originElement, T destinationElement) {
 		
@@ -145,7 +170,13 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		
 		return -1.0;
 	}
-
+	// ===================================
+	//
+	//  GETTERS
+	//
+	// ===================================
+		
+	
 	@Override
 	public int getSize() {
 		return this.size;
@@ -166,9 +197,15 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		return nodes.length;
 	}
 	
+	// ===================================
+	//
+	//  METODOS AUXILIARES
+	//
+	// ===================================
+	
 	public void checkNull(T obj){
 		if (obj == null){
-			int a = 1;
+			throw new NullPointerException("ELEMETNO NO VALIDO: NULL");
 		}
 	}
 	
