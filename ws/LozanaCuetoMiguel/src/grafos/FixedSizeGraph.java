@@ -1,5 +1,7 @@
 package grafos;
 
+import java.lang.reflect.Array;
+
 import grafos.exceptions.ElementNotPresentException;
 import grafos.exceptions.FullStructureException;
 
@@ -47,19 +49,11 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		}
 		
 		if (find(element) == -1) {
-			
-			cleanIndex(size);
-			
-			this.nodes[size] = element;
-			
-			
-
-						
-			
-			size++;
-			
 			return true;
 		}
+		
+		nodes[size] = element;
+		
 		return false;
 	}
 	
@@ -96,24 +90,17 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		if (nodeIndex == -1){
 			return false;
 		}
-		int lastIndex = size - 1;
-		
-		if (nodeIndex != lastIndex) {
-	        for (int i = 0; i < size; i++) {
+		nodes[nodeIndex] = nodes[--size];
+	    for (int i = 0; i < size; i++) {        
+	        edges[nodeIndex][i] = edges[size][i];
+	        edges[i][nodeIndex] = edges[i][size];
 	            
-	        	edges[nodeIndex][i] = edges[lastIndex][i];
-	            edges[i][nodeIndex] = edges[i][lastIndex];
-	            
-	            weights[nodeIndex][i] = weights[lastIndex][i];
-	            weights[i][nodeIndex] = weights[i][lastIndex];
-	        }
-	        edges[nodeIndex][nodeIndex] = edges[lastIndex][lastIndex];
-	        weights[nodeIndex][nodeIndex] = weights[lastIndex][lastIndex];
-	        
-	        nodes[nodeIndex] = nodes[lastIndex];
+	        weights[nodeIndex][i] = weights[size][i];
+	        weights[i][nodeIndex] = weights[i][size];
 	    }
-		cleanIndex(lastIndex);
-		size--;
+	    edges[nodeIndex][nodeIndex] = edges[size][size];
+	    weights[nodeIndex][nodeIndex] = weights[size][size];
+	    
 		return true;
 	}
 
@@ -249,6 +236,37 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		
 	    nodes[index] = null;
 	}
-	
+	private int getPivot(int[] dijkstraPathsP){
+		int lower = (int) Double.POSITIVE_INFINITY;
+ 		for (int num:dijkstraPathsP){
+			if (num < lower) {
+				lower = num; 
+			}
+		}
+		return lower;
+		
+
+	}
+	// ===================================
+	//
+	//  METODOS TEORIA
+	//
+	// ===================================
+
+
+
+	@Override
+	public DijkstraDataClass dijkstra(T originElement) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public double minimumCostPathDijkstra(T originElement, T destinationElement) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

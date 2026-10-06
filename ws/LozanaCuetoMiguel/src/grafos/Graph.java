@@ -96,5 +96,28 @@ public interface Graph<T> {
      * @return The number of nodes
      */
     int getSize();
-    
+
+    /**
+     * Executes Dijkstra's algorithm to find the shortest paths from a source vertex
+     * to all other vertices.
+     *
+     * @param originElement The source vertex from which to calculate paths
+     * @return A DijkstraDataClass object containing the calculated paths and costs
+     * @throws NullPointerException       if startingElement is null
+     * @throws ElementNotPresentException if startingElement doesn't exist in the
+     *                                    graph
+     */
+    DijkstraDataClass dijkstra(T originElement);
+
+    /**
+     * Gets the minimum cost of the path from origin to destination using Dijkstra's
+     * algorithm.
+     *
+     * @param originElement      The starting node
+     * @param destinationElement The ending node
+     * @return The minimum cost, or INFINITY if no path exists
+     * @throws NullPointerException       if either element is null
+     * @throws ElementNotPresentException if either node doesn't exist in the graph
+     */
+    double minimumCostPathDijkstra(T originElement, T destinationElement);
 }
