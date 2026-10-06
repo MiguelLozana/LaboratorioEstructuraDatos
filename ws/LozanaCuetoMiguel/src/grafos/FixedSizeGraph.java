@@ -295,5 +295,5 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+	// CALCULAR COSTE MINIMIMO
 }
