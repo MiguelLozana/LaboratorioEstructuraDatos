@@ -236,14 +236,19 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		
 	    nodes[index] = null;
 	}
-	private int getPivot(int[] dijkstraPathsP){
-		int lower = (int) Double.POSITIVE_INFINITY;
- 		for (int num:dijkstraPathsP){
-			if (num < lower) {
-				lower = num; 
+	
+	//
+	private int getPivot( boolean[] usedNodes,double[] dijkstraCostD){
+		int lowerIndex = -1;
+		double lower =  Double.POSITIVE_INFINITY;
+		
+		for (int i = 0; i < size; i++) {
+			if (!usedNodes[i] && dijkstraCostD[i] < lower) {
+				lowerIndex = i; 
+				lower = dijkstraCostD[i]; 
 			}
 		}
-		return lower;
+		return lowerIndex;
 		
 
 	}
@@ -257,8 +262,30 @@ public class FixedSizeGraph<T> implements Graph<T> {
 
 	@Override
 	public DijkstraDataClass dijkstra(T originElement) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		int originIndex = getValidatedIndexOd(originElement);
+		DijkstraDataClass dataClass = new DijkstraDataClass(size,this.edges,this.weights,originIndex);
+		boolean[] visited = new boolean[size];
+		visited[originIndex] = true;
+		
+		int pivot = getPivot(visited,dataClass.getDijkstraCostsD());
+		
+		while (pivot  != -1) {
+			visited[pivot] = true;
+			
+			for (int i = 0; i < size ; i++) {
+				double costByPivot = dataClass.getDijkstraCostsDValue(pivot) + weights[pivot][i];
+				if (visited[i] && edges[pivot][i]) {
+					dataClass.updateDijkstraCostsD(i, costByPivot);
+					dataClass.updateDijkstraPathsP(i, pivot);
+				}
+			}
+			pivot = getPivot(visited, dataClass.getDijkstraCostsD());
+		}
+		
+		
+		
+		return dataClass;
 	}
 
 

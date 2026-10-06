@@ -19,11 +19,11 @@ public class DijkstraDataClass {
     	this.dijkstraPathsP = new int[nodeNumber];
     	
     	for (int i = 0; i < nodeNumber; i++) {
-    		if(i==startingNodeIndex ) {
+    		if(edges[startingNodeIndex][i]) {
     			dijkstraCostsD[i] = weights[startingNodeIndex][i]; 
         		dijkstraPathsP[i] = startingNodeIndex;
-    		} else if (edges[startingNodeIndex][i]) {
-    			dijkstraCostsD[i] = Double.POSITIVE_INFINITY;
+    		} else if ( i == startingNodeIndex) {
+    			dijkstraCostsD[i] = 0;
     			dijkstraPathsP[i] = NO_PREDECESSOR;
     		} else {
 			dijkstraCostsD[i] = Double.POSITIVE_INFINITY;
