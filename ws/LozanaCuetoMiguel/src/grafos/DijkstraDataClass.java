@@ -3,8 +3,8 @@ package grafos;
 import java.util.Arrays;
 
 /**
- * @author Nestor
- * @version 2022-23
+ * @author Miguel Lozana
+ * @version oct-26
  */
 public class DijkstraDataClass {
     final static int NO_PREDECESSOR = -1;
@@ -14,17 +14,18 @@ public class DijkstraDataClass {
     int[] dijkstraPathsP; // Dijkstra's P Paths Vector
 
     public DijkstraDataClass(int nodeNumber, boolean[][] edges, double[][] weights, int startingNodeIndex) {
+    	
     	this.startingNodeIndex = startingNodeIndex;
     	this.dijkstraCostsD = new double[nodeNumber];
     	this.dijkstraPathsP = new int[nodeNumber];
     	
     	for (int i = 0; i < nodeNumber; i++) {
-    		if(edges[startingNodeIndex][i]) {
-    			dijkstraCostsD[i] = weights[startingNodeIndex][i]; 
-        		dijkstraPathsP[i] = startingNodeIndex;
-    		} else if ( i == startingNodeIndex) {
+    		if ( i == startingNodeIndex) {
     			dijkstraCostsD[i] = 0;
     			dijkstraPathsP[i] = NO_PREDECESSOR;
+    		} else if(edges[startingNodeIndex][i]) {
+    			dijkstraCostsD[i] = weights[startingNodeIndex][i]; 
+        		dijkstraPathsP[i] = startingNodeIndex;
     		} else {
 			dijkstraCostsD[i] = Double.POSITIVE_INFINITY;
 			dijkstraPathsP[i] = NO_PREDECESSOR;

@@ -1,7 +1,5 @@
 package grafos;
 
-import java.lang.reflect.Array;
-
 import grafos.exceptions.ElementNotPresentException;
 import grafos.exceptions.FullStructureException;
 
@@ -21,10 +19,9 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	//
 	// ===================================
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // le quita el warning en el casteo 
 	public FixedSizeGraph( int capacity) {
-		if (capacity <= 0 )
-			throw new IllegalArgumentException("No peude ser menor igual a 0");
+		checkParam(capacity > 0, "La capacidad ha de ser >0");
 		
 		nodes = (T[]) new Object[capacity];
 		edges = new boolean[capacity][capacity];
@@ -48,27 +45,34 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			throw new FullStructureException("Nodes ha llegado a su maxima capacidad, no puede anadir");
 		}
 		
-		if (find(element) == -1) {
-			return true;
+		if (find(element) == -1) {//Si no encuetra el nodo, lo anade
+			nodes[size] = element;
+		
+			for (int i = 0; i < size; i++) {
+				weights[size][i] = 0;
+				weights[i][size] = 0;
+			
+				edges[size][i] = false;
+				edges[i][size]  = false;
+			}	
+			weights[size][size] = 0;
+			edges[size][size] = false;
+			size++;
+			return true; 
 		}
-		
-		nodes[size] = element;
-		
 		return false;
 	}
 	
 	
 	@Override
 	public boolean addEdge(T originElement, T destinationElement, double weight) {
-		if (weight <= 0) {
-			throw new IllegalArgumentException("El peso ha de ser positivo");
-		}
-		
+		checkParam(weight >0 , "El peso ha de ser > 0 ");
 		
 		int originIndex = getValidatedIndexOd(originElement);
 		int destinationIndex = getValidatedIndexOd(destinationElement);
 		
-		if (!this.edges[originIndex][destinationIndex]) {
+		if (!this.edges[originIndex][destinationIndex]) {  //Si no hay arista
+			
 			this.edges[originIndex][destinationIndex] = true;
 			this.weights[originIndex][destinationIndex] = weight;
 			return true;	
@@ -130,8 +134,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
 
 	@Override
 	public boolean existsEdge(T originElement, T destinationElement) {
-		checkNull(destinationElement);
 		checkNull(originElement);
+		checkNull(destinationElement);
 		
 		int originIndex = find(originElement);
 		int destinationIndex = find(destinationElement);
@@ -210,8 +214,12 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	//  METODOS AUXILIARES
 	//
 	// ===================================
-	
-	public void checkNull(T obj){
+	private void checkParam(boolean neededCondition, String msg) {
+		if (!neededCondition) {
+			throw new IllegalArgumentException(msg);
+		}
+	}
+	private void checkNull(T obj){
 		if (obj == null){
 			throw new NullPointerException("ELEMETNO NO VALIDO: NULL");
 		}
@@ -226,18 +234,13 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		return index;
 	}
 	
-	public void cleanIndex(int index) {
-		for (int i = 0; i < nodes.length; i++) {
-	        edges[index][i] = false;
-	        edges[i][index] = false;
-	        weights[index][i] = 0.0;
-	        weights[i][index] = 0.0;
-	    }
-		
-	    nodes[index] = null;
-	}
 	
-	//
+	
+	/*
+	 * Escoje el siguente pivote. Ha se ser el menor NO USADO 
+	 * @param usedNodes Vector de nodos usados. El indice del vector correpode con el indice del nodo
+	 * @return int el indice del siguente pivote, -1 en caso de que no halla pivote valido./
+	 */
 	private int getPivot( boolean[] usedNodes,double[] dijkstraCostD){
 		int lowerIndex = -1;
 		double lower =  Double.POSITIVE_INFINITY;
@@ -275,16 +278,13 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			
 			for (int i = 0; i < size ; i++) {
 				double costByPivot = dataClass.getDijkstraCostsDValue(pivot) + weights[pivot][i];
-				if (visited[i] && edges[pivot][i]) {
+				if (!visited[i] && edges[pivot][i] && (costByPivot < dataClass.getDijkstraCostsDValue(i))) {
 					dataClass.updateDijkstraCostsD(i, costByPivot);
 					dataClass.updateDijkstraPathsP(i, pivot);
 				}
 			}
 			pivot = getPivot(visited, dataClass.getDijkstraCostsD());
 		}
-		
-		
-		
 		return dataClass;
 	}
 
@@ -292,8 +292,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
 
 	@Override
 	public double minimumCostPathDijkstra(T originElement, T destinationElement) {
-		// TODO Auto-generated method stub
-		return 0;
+		int destination = getValidatedIndexOd(destinationElement);
+		return dijkstra(originElement).getDijkstraCostsDValue(destination);
 	}
 	// CALCULAR COSTE MINIMIMO
 }

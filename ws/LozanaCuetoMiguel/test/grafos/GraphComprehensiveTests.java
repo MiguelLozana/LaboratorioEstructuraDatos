@@ -146,7 +146,7 @@ class GraphComprehensiveTests {
 
         assertArrayEquals(expectedEdges, graph.getEdges());
         assertArrayEquals(expectedWeights, graph.getWeights());
-
+        System.out.print("1");
         // Add node F
         assertTrue(graph.addNode('F'));
         expectedEdges = new boolean[][]{ // Updated adjacency matrix after removing C
@@ -168,8 +168,9 @@ class GraphComprehensiveTests {
         }; // A B E D F -
 
         boolean[][] edges = graph.getEdges();
-        assertArrayEquals(expectedEdges, edges);
 
+        assertArrayEquals(expectedEdges, edges);
+        
         double[][] weights = graph.getWeights();
         for (int i = 0; i < edges.length; i++) {
             for (int j = 0; j < edges[i].length; j++) {
