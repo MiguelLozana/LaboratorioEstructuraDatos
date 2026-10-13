@@ -110,6 +110,53 @@ public interface Graph<T> {
     DijkstraDataClass dijkstra(T originElement);
 
     /**
+     * Executes the Floyd-Warshall algorithm to find shortest paths between all
+     * pairs of vertices. Results are stored internally and can be accessed through
+     * minimumCostPathFloyd and printFloydPath.
+     *
+     * @return false if the graph is empty (size == 0), true otherwise.
+     */
+    boolean floyd();
+
+    /**
+     * Performs a depth-first traversal of the graph starting from the specified
+     * element.
+     *
+     * @param originElement The element to start traversal from
+     * @return A string representation of the traversal path
+     * @throws NullPointerException       if startingElement is null
+     * @throws ElementNotPresentException if startingElement doesn't exist in the
+     *                                    graph
+     */
+    String printDepthFirstTraversal(T originElement);
+
+    /**
+     * Returns a string representation of the shortest path between two nodes using
+     * Floyd's algorithm. Floyd's algorithm must be executed before calling this
+     * method.
+     *
+     * @param originElement      The starting node
+     * @param destinationElement The ending node
+     * @return A string showing the path from origin to destination, or a message
+     * indicating no path exists
+     * @throws NullPointerException       if either element is null
+     * @throws ElementNotPresentException if either node doesn't exist in the graph
+     */
+    String printFloydPath(T originElement, T destinationElement);
+
+    /**
+     * Gets the minimum cost of the path from origin to destination using Floyd's
+     * algorithm. Floyd's algorithm must be executed before calling this method.
+     *
+     * @param originElement      The starting node
+     * @param destinationElement The ending node
+     * @return The minimum cost, or INFINITY if no path exists
+     * @throws NullPointerException       if either element is null
+     * @throws ElementNotPresentException if either node doesn't exist in the graph
+     */
+    double minimumCostPathFloyd(T originElement, T destinationElement);
+
+    /**
      * Gets the minimum cost of the path from origin to destination using Dijkstra's
      * algorithm.
      *

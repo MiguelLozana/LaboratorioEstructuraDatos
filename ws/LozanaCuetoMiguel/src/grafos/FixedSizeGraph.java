@@ -6,12 +6,15 @@ import grafos.exceptions.FullStructureException;
 public class FixedSizeGraph<T> implements Graph<T> {
 	
 	
+			
 	
 	private T[] nodes;
 	private boolean[][] edges; // Matriz de adyacencia
 	private double[][] weights; // Matriz de pesos 
 	private int size;
 	
+	private double[][]floydCostsA;
+	private int[][] floydPathsP;
 
 	// ===================================
 	//
@@ -19,6 +22,10 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	//
 	// ===================================
 	
+	
+
+
+
 	@SuppressWarnings("unchecked") // le quita el warning en el casteo 
 	public FixedSizeGraph( int capacity) {
 		checkParam(capacity > 0, "La capacidad ha de ser >0");
@@ -208,6 +215,12 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	public int getCapacity() {
 		return nodes.length;
 	}
+	public double[][] getFloydCostsA() {
+		return floydCostsA;
+	}
+	public int[][] getFloydPathsP() {
+		return floydPathsP;
+	}
 	
 	// ===================================
 	//
@@ -257,7 +270,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	}
 	// ===================================
 	//
-	//  METODOS TEORIA
+	//  METODOS DIJTA
 	//
 	// ===================================
 
@@ -296,4 +309,89 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		return dijkstra(originElement).getDijkstraCostsDValue(destination);
 	}
 	// CALCULAR COSTE MINIMIMO
+
+	// ===================================
+		//
+		//  FLOYD
+		//
+		// ===================================
+
+	@Override
+	public boolean floyd() {
+		initializateFloydMatrix();
+		if (size == 0){
+			return false;
+		}
+		for (int pivoteIndex= 0; pivoteIndex< size; pivoteIndex++) {
+			for (int origenIndex= 0; origenIndex< size; origenIndex++) {
+				for (int destIndex= 0;destIndex< size; destIndex++) {
+					
+					double costePorPivote = floydCostsA[origenIndex][pivoteIndex] + floydCostsA[pivoteIndex][destIndex];
+						
+					if( costePorPivote < floydCostsA[origenIndex][destIndex]) {
+						floydCostsA[origenIndex][destIndex] = costePorPivote;
+						floydPathsP[origenIndex][destIndex] = pivoteIndex;
+					}
+				}		
+			}	
+		}
+		return true;
+	}
+
+
+
+	@Override
+	public String printDepthFirstTraversal(T originElement) {
+		int index = getValidatedIndexOd(originElement);
+		boolean[] used = new boolean[size];
+		return  printDepthFirstTraversal( index , used);
+	}
+
+	private  String printDepthFirstTraversal(int element,boolean[] visitados) {
+		String path = nodes[element] + "-";
+		visitados[element] = true;
+		
+		for (int i = 0; i < size; i++) {
+			if (edges[element][i]){
+				path +=	printDepthFirstTraversal(i,visitados);
+			}
+		}
+		return path;
+}
+
+
+	@Override
+	public String printFloydPath(T originElement, T destinationElement) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public double minimumCostPathFloyd(T originElement, T destinationElement) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	private void initializateFloydMatrix() {
+		floydCostsA = new double[size][size];
+		floydPathsP = new int[size][size];
+		
+		
+		double inf = Double.POSITIVE_INFINITY;
+		for(int i = 0; i<size; i++) {
+			for(int j = 0; j<size; i++) {
+				if (i == j) {
+					floydCostsA[i][j] = 0;
+				}else if( edges[i][j]) {
+					floydCostsA[i][j] = weights[i][j];
+				}else {
+					floydCostsA[i][j] = inf;
+				}
+			}
+		}
+		
+		
+	}
 }
