@@ -352,7 +352,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		visitados[element] = true;
 		
 		for (int i = 0; i < size; i++) {
-			if (edges[element][i]){
+			if (!visitados[i] && edges[element][i]){
 				path +=	printDepthFirstTraversal(i,visitados);
 			}
 		}
@@ -362,15 +362,31 @@ public class FixedSizeGraph<T> implements Graph<T> {
 
 	@Override
 	public String printFloydPath(T originElement, T destinationElement) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		int origenIndex = getValidatedIndexOd(originElement);
+		int destIndex = getValidatedIndexOd(destinationElement);
+		if (floydCostsA == null)
+			floyd();
+		
+			
+		return originElement +  printFloydPathIndex(origenIndex,destIndex) + destinationElement;
 
+	}
+	private String printFloydPathIndex(int originElement, int destinationElement) {
+		String path = "";
+		int pivote = floydPathsP[originElement][destinationElement];
+		/*
+		 * Si no hay pivote acabo
+		 * si lo ay return print intermediate path (origin pivote) + nodes[pivote] + pirnt intermediate path (pivote dsetinaticon)
+		 */
+		path += printFloydPathIndex(originElement,pivote) + "-";
+
+		return path;
+	}
 
 
 	@Override
 	public double minimumCostPathFloyd(T originElement, T destinationElement) {
-		// TODO Auto-generated method stub
+		floyd();
 		return 0;
 	}
 	
@@ -393,5 +409,5 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		}
 		
 		
-	}
+	} //Acabaer metodos 
 }
