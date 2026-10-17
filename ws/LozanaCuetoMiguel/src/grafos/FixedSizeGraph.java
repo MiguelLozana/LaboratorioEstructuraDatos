@@ -5,7 +5,7 @@ import grafos.exceptions.FullStructureException;
 
 public class FixedSizeGraph<T> implements Graph<T> {
 	
-	
+	static final double NO_REACHABLE_NODE = -1;
 			
 	
 	private T[] nodes;
@@ -26,7 +26,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 
 
 
-	@SuppressWarnings("unchecked") // le quita el warning en el casteo 
+
 	public FixedSizeGraph( int capacity) {
 		checkParam(capacity > 0, "La capacidad ha de ser >0");
 		
@@ -35,9 +35,89 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		weights = new double[capacity][capacity];
 		size = 0;
 	}
+	public FixedSizeGraph(int size, T[] nodes, boolean[][] edges, double[][] weights) {
+		this.size = size;
+		this.nodes = nodes;
+		this.edges = edges;
+		this.weights = weights;
+	}
 	
-	
-	
+	public FixedSizeGraph(int size, T[] nodes, boolean[][] edges, double[][] weights, double[][] floydCostsA, int[][] floydPathsP){
+		this(size,nodes,edges,weights);
+		this.floydCostsA = floydCostsA;
+		this.floydPathsP = floydPathsP;
+		
+		
+	}
+	// ===================================
+		//
+		//  GETTERS
+		//
+		// ===================================
+			
+		@Override
+		public int getSize() {
+			return this.size;
+		}
+
+		public T[] getNodes() {
+			return nodes;
+		}
+
+		public boolean[][] getEdges() {
+			return edges;
+		}
+
+		public double[][] getWeights() {
+			return weights;
+		}
+		public int getCapacity() {
+			return nodes.length;
+		}
+		public double[][] getFloydCostsA() {
+			return floydCostsA;
+		}
+		public int[][] getFloydPathsP() {
+			return floydPathsP;
+		}
+		// ===================================
+		//
+		//  METODOS AUXILIARES
+		//
+		// ===================================
+		private void checkParam(boolean neededCondition, String msg) {
+			if (!neededCondition) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+		private void checkNull(T obj){
+			if (obj == null){
+				throw new NullPointerException("ELEMETNO NO VALIDO: NULL");
+			}
+		}
+		
+		public int getValidatedIndexOd(T element) {
+			checkNull(element);
+			int index = find(element);
+			if(index == -1){
+				throw new ElementNotPresentException("ELEMETNO NO ENCONTRADO");
+			}
+			return index;
+		}
+		
+		/*
+		 * Recorre el vector de nodos mediante el indice hasta que encuetra y devuevle su indice
+		 * @return int indice del elemento o -1 en caso de que no lo encuentre
+		 */
+		 
+		public int find(T element) {
+			for (int index = 0; index< this.size; index++) {
+				if (nodes[index].equals(element)) {
+					return index;
+				}
+			}
+			return -1;
+		}
 	// ===================================
 	//
 	//  ANADIR
@@ -129,7 +209,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	}
 	// ===================================
 	//
-	//  COMPORBAR EXISTENCIA y BUSCAR
+	//  CONSULTAS
 	//
 	// ===================================
 	@Override
@@ -154,123 +234,32 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		return this.edges[originIndex][destinationIndex];
 	}
 
-	/*
-	 * Recorre el vector de nodos mediante el indice hasta que encuetra y devuevle su indice
-	 * @return int indice del elemento o -1 en caso de que no lo encuentre
-	 */
-	public int find(T element) {
-		for (int index = 0; index< this.size; index++) {
-			if (nodes[index].equals(element)) {
-				return index;
-			}
-		}
-		return -1;
-	}
-	// ===================================
-	//
-	//  OBTENER DATOS
-	//
-	// ===================================
+	
+
 	@Override
 	public double getWeight(T originElement, T destinationElement) {
 		
 		int originIndex = getValidatedIndexOd(originElement);
 		int destinationIndex = getValidatedIndexOd(destinationElement);
 		
-		
+			
 		if (originIndex == -1 || destinationIndex == -1){
 			throw new ElementNotPresentException("ELEMETNO NO ENCONTADO");
-		
-		}	
 			
+		}	
 		if (existsEdge(originElement,destinationElement)) {
 			return this.weights[originIndex][destinationIndex];
 		}
-		
 		return -1.0;
 	}
-	// ===================================
-	//
-	//  GETTERS
-	//
-	// ===================================
 		
 	
-	@Override
-	public int getSize() {
-		return this.size;
-	}
-
-	public T[] getNodes() {
-		return nodes;
-	}
-
-	public boolean[][] getEdges() {
-		return edges;
-	}
-
-	public double[][] getWeights() {
-		return weights;
-	}
-	public int getCapacity() {
-		return nodes.length;
-	}
-	public double[][] getFloydCostsA() {
-		return floydCostsA;
-	}
-	public int[][] getFloydPathsP() {
-		return floydPathsP;
-	}
+	
+	
 	
 	// ===================================
 	//
-	//  METODOS AUXILIARES
-	//
-	// ===================================
-	private void checkParam(boolean neededCondition, String msg) {
-		if (!neededCondition) {
-			throw new IllegalArgumentException(msg);
-		}
-	}
-	private void checkNull(T obj){
-		if (obj == null){
-			throw new NullPointerException("ELEMETNO NO VALIDO: NULL");
-		}
-	}
-	
-	public int getValidatedIndexOd(T element) {
-		checkNull(element);
-		int index = find(element);
-		if(index == -1){
-			throw new ElementNotPresentException("ELEMETNO NO ENCONTRADO");
-		}
-		return index;
-	}
-	
-	
-	
-	/*
-	 * Escoje el siguente pivote. Ha se ser el menor NO USADO 
-	 * @param usedNodes Vector de nodos usados. El indice del vector correpode con el indice del nodo
-	 * @return int el indice del siguente pivote, -1 en caso de que no halla pivote valido./
-	 */
-	private int getPivot( boolean[] usedNodes,double[] dijkstraCostD){
-		int lowerIndex = -1;
-		double lower =  Double.POSITIVE_INFINITY;
-		
-		for (int i = 0; i < size; i++) {
-			if (!usedNodes[i] && dijkstraCostD[i] < lower) {
-				lowerIndex = i; 
-				lower = dijkstraCostD[i]; 
-			}
-		}
-		return lowerIndex;
-		
-
-	}
-	// ===================================
-	//
-	//  METODOS DIJTA
+	//  DIJKSTRA
 	//
 	// ===================================
 
@@ -300,7 +289,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		}
 		return dataClass;
 	}
-
+	
 
 
 	@Override
@@ -308,20 +297,43 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		int destination = getValidatedIndexOd(destinationElement);
 		return dijkstra(originElement).getDijkstraCostsDValue(destination);
 	}
-	// CALCULAR COSTE MINIMIMO
+	
+	
+	
+	
+	/*
+	 * Escoje el siguente pivote. Ha se ser el menor NO USADO 
+	 * @param usedNodes Vector de nodos usados. El indice del vector correpode con el indice del nodo
+	 * @return int el indice del siguente pivote, -1 en caso de que no halla pivote valido./
+	 */
+	private int getPivot( boolean[] usedNodes,double[] dijkstraCostD){
+		int lowerIndex = -1;
+		double lower =  Double.POSITIVE_INFINITY;
+		
+		for (int i = 0; i < size; i++) {
+			if (!usedNodes[i] && dijkstraCostD[i] < lower) {
+				lowerIndex = i; 
+				lower = dijkstraCostD[i]; 
+			}
+		}
+		return lowerIndex;
+		
+
+	}
 
 	// ===================================
-		//
-		//  FLOYD
-		//
-		// ===================================
-
+	//
+	//  FLOYD
+	//
+	// ===================================
+	
 	@Override
 	public boolean floyd() {
-		initializateFloydMatrix();
+		
 		if (size == 0){
 			return false;
 		}
+		initializateFloydMatrix();
 		for (int pivoteIndex= 0; pivoteIndex< size; pivoteIndex++) {
 			for (int origenIndex= 0; origenIndex< size; origenIndex++) {
 				for (int destIndex= 0;destIndex< size; destIndex++) {
@@ -338,8 +350,72 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		return true;
 	}
 
+	// Inicializa las matrices de floyd, 
+	//Path (P) -> llena de -1
+	//Costs (A) 
+	//    -> 0 en la diagonal 
+	//    -> Peso si hay paso directo entre i - j
+	//    -> infinito si es innacesible en un salto 
+	private void initializateFloydMatrix() {
+		floydCostsA = new double[size][size];
+		floydPathsP = new int[size][size];
+			
+		double inf = Double.POSITIVE_INFINITY;
+		for(int i = 0; i<size; i++) {
+			for(int j = 0; j<size; j++) {
+				floydPathsP[i][j] = -1;
+				if (i == j) {
+					floydCostsA[i][j] = 0;
+				}else if( edges[i][j]) {
+					floydCostsA[i][j] = weights[i][j];
+				}else {
+					floydCostsA[i][j] = inf;
+				}
+			}
+		}	
+	} 
+
+  
+	@Override
+	public String printFloydPath(T originElement, T destinationElement) {
+		int origenIndex = getValidatedIndexOd(originElement);
+		int destIndex = getValidatedIndexOd(destinationElement);
+		if ( floydCostsA == null || size == floydCostsA.length)
+			floyd();
+	
+		return printFloydPathIndex(origenIndex,destIndex) + destinationElement;
+
+	}
+
+	private String printFloydPathIndex(int originElement, int destinationElement) {
+		if (floydCostsA[originElement][destinationElement] == Double.POSITIVE_INFINITY) {
+			return String.format("%s\t(%s)\t", nodes[originElement], Double.POSITIVE_INFINITY);
+		}
+		int pivot = floydPathsP[originElement][destinationElement];
+		if (pivot == -1) {
+			double cost = floydCostsA[originElement][destinationElement];
+			return String.format("%s\t(%s)\t", nodes[originElement],cost);
+		}
+		return printFloydPathIndex(originElement,pivot) + printFloydPathIndex(pivot,destinationElement);
+
+		
+	}
 
 
+	@Override
+	public double minimumCostPathFloyd(T originElement, T destinationElement) {
+		int originIndex = getValidatedIndexOd(originElement);
+		int destIndex = getValidatedIndexOd( destinationElement);
+		
+		if (floydCostsA == null)
+			floyd();
+		return floydCostsA[originIndex][destIndex];
+	}
+	// ===================================
+	//
+	//  RECORRIDOS
+	//
+	// ===================================
 	@Override
 	public String printDepthFirstTraversal(T originElement) {
 		int index = getValidatedIndexOd(originElement);
@@ -357,57 +433,6 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			}
 		}
 		return path;
-}
-
-
-	@Override
-	public String printFloydPath(T originElement, T destinationElement) {
-		int origenIndex = getValidatedIndexOd(originElement);
-		int destIndex = getValidatedIndexOd(destinationElement);
-		if (floydCostsA == null)
-			floyd();
-		
-			
-		return originElement +  printFloydPathIndex(origenIndex,destIndex) + destinationElement;
-
-	}
-	private String printFloydPathIndex(int originElement, int destinationElement) {
-		String path = "";
-		int pivote = floydPathsP[originElement][destinationElement];
-		/*
-		 * Si no hay pivote acabo
-		 * si lo ay return print intermediate path (origin pivote) + nodes[pivote] + pirnt intermediate path (pivote dsetinaticon)
-		 */
-		path += printFloydPathIndex(originElement,pivote) + "-";
-
-		return path;
-	}
-
-
-	@Override
-	public double minimumCostPathFloyd(T originElement, T destinationElement) {
-		floyd();
-		return 0;
-	}
 	
-	private void initializateFloydMatrix() {
-		floydCostsA = new double[size][size];
-		floydPathsP = new int[size][size];
-		
-		
-		double inf = Double.POSITIVE_INFINITY;
-		for(int i = 0; i<size; i++) {
-			for(int j = 0; j<size; i++) {
-				if (i == j) {
-					floydCostsA[i][j] = 0;
-				}else if( edges[i][j]) {
-					floydCostsA[i][j] = weights[i][j];
-				}else {
-					floydCostsA[i][j] = inf;
-				}
-			}
-		}
-		
-		
-	} //Acabaer metodos 
+	}
 }
