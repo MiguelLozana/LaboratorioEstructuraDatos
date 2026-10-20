@@ -157,7 +157,7 @@ class FloydTests {
         // printFloydPath does it automatically if not done yet.
 
         String pathAtoA = graph.printFloydPath('A', 'A');
-        assertEquals("A\t(7.0)\tA", pathAtoA);
+        assertEquals("A\t(0.0)\tA", pathAtoA);
 
         String pathAtoE = graph.printFloydPath('A', 'E');
         assertEquals("A\t(1.0)\tB\t(2.0)\tC\t(6.0)\tE", pathAtoE);
