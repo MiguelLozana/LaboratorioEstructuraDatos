@@ -59,9 +59,10 @@ public class EjericiosGrafosImpl<T> extends FixedSizeGraph<T> implements Ejercic
 		DijkstraDataClass dj =  dijkstra(originElement);
 		int[] path = dj.getDijkstraPathsP();
 		
+		int dest = getValidatedIndexOd(destinationElement); 
+		int origen = dj.getNodeIndex();
 		
-		String completePath = "";
-		return completePath;
+		return printDijkstraPathRecursive( origen,dest,path);
 	}
 	public String printDijkstraPathRecursive(int originElement, int destinationElement,int[] path) {
 		if (originElement == destinationElement) {
@@ -76,6 +77,25 @@ public class EjericiosGrafosImpl<T> extends FixedSizeGraph<T> implements Ejercic
 	
 	
 	
+	public String printDijkstraPath2(T originElement, T destinationElement) {
+		int dest = getValidatedIndexOd(destinationElement);
+		DijkstraDataClass dj =  dijkstra(originElement);
+		int origen = dj.getNodeIndex();
+		
+		String camino = destinationElement.toString();
+		int primerNodo = dest;
+		
+		int predecesor = dest;
+		while(predecesor != origen) {
+			predecesor = dj.getDijkstraPathsPValue(predecesor);
+			
+			camino = getNodes()[predecesor].toString() + getWeights()[predecesor][primerNodo] + camino + "";
+			primerNodo = predecesor;
+
+		}
+		
+		return null;
+	}
 	@Override
 	public double getCostBalance(T element) {
 		double balance = 0;;
