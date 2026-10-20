@@ -96,7 +96,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			}
 		}
 		
-		public int getValidatedIndexOd(T element) {
+		protected int getValidatedIndexOd(T element) {
 			checkNull(element);
 			int index = find(element);
 			if(index == -1){
@@ -205,6 +205,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			return false;
 		}
 		edges[originIndex][destinationIndex] = false;
+		
+		floydCostsA = null;
 		return true;
 	}
 	// ===================================
@@ -364,7 +366,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		for(int i = 0; i<size; i++) {
 			for(int j = 0; j<size; j++) {
 				floydPathsP[i][j] = -1;
-				if (i == j) {
+				if (i == j && !edges[i][j]) {
 					floydCostsA[i][j] = 0;
 				}else if( edges[i][j]) {
 					floydCostsA[i][j] = weights[i][j];
@@ -380,7 +382,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	public String printFloydPath(T originElement, T destinationElement) {
 		int origenIndex = getValidatedIndexOd(originElement);
 		int destIndex = getValidatedIndexOd(destinationElement);
-		if ( floydCostsA == null || size == floydCostsA.length)
+		if ( floydCostsA == null)
 			floyd();
 	
 		return printFloydPathIndex(origenIndex,destIndex) + destinationElement;
