@@ -22,11 +22,6 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	//
 	// ===================================
 	
-	
-
-
-
-
 	public FixedSizeGraph( int capacity) {
 		checkParam(capacity > 0, "La capacidad ha de ser >0");
 		
@@ -145,9 +140,12 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			weights[size][size] = 0;
 			edges[size][size] = false;
 			size++;
+			floydCostsA = null;
 			return true; 
 		}
+		
 		return false;
+		
 	}
 	
 	
@@ -162,9 +160,12 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			
 			this.edges[originIndex][destinationIndex] = true;
 			this.weights[originIndex][destinationIndex] = weight;
+			floydCostsA = null;
 			return true;	
 		}
+		
 		return false;
+		
 	}
 	
 	// ===================================
@@ -192,6 +193,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	    edges[nodeIndex][nodeIndex] = edges[size][size];
 	    weights[nodeIndex][nodeIndex] = weights[size][size];
 	    
+	    floydCostsA = null;
 		return true;
 	}
 
@@ -205,6 +207,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			return false;
 		}
 		edges[originIndex][destinationIndex] = false;
+		
 		
 		floydCostsA = null;
 		return true;
@@ -243,12 +246,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		
 		int originIndex = getValidatedIndexOd(originElement);
 		int destinationIndex = getValidatedIndexOd(destinationElement);
-		
 			
-		if (originIndex == -1 || destinationIndex == -1){
-			throw new ElementNotPresentException("ELEMETNO NO ENCONTADO");
-			
-		}	
 		if (existsEdge(originElement,destinationElement)) {
 			return this.weights[originIndex][destinationIndex];
 		}
@@ -365,9 +363,12 @@ public class FixedSizeGraph<T> implements Graph<T> {
 		double inf = Double.POSITIVE_INFINITY;
 		for(int i = 0; i<size; i++) {
 			for(int j = 0; j<size; j++) {
+				//Aun no hay predecesores
 				floydPathsP[i][j] = -1;
-				if (i == j && !edges[i][j]) {
+				//En la diagonal es 0
+				if (i == j) {
 					floydCostsA[i][j] = 0;
+					
 				}else if( edges[i][j]) {
 					floydCostsA[i][j] = weights[i][j];
 				}else {
@@ -390,17 +391,23 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	}
 
 	private String printFloydPathIndex(int originElement, int destinationElement) {
+		// Si ir es infinito muestara infinito
 		if (floydCostsA[originElement][destinationElement] == Double.POSITIVE_INFINITY) {
 			return String.format("%s\t(%s)\t", nodes[originElement], Double.POSITIVE_INFINITY);
 		}
+		//Busca pivote / predecesor
 		int pivot = floydPathsP[originElement][destinationElement];
+		//Si no hay pivote
 		if (pivot == -1) {
-			double cost = floydCostsA[originElement][destinationElement];
-			return String.format("%s\t(%s)\t", nodes[originElement],cost);
+		    double cost = weights[originElement][destinationElement];
+		    
+		    // SI N - N y no tiene arista consigo mimso, el peso es 0
+		    if (originElement == destinationElement && !edges[originElement][destinationElement]) {
+		        cost = 0;
+		    }
+		    return String.format("%s\t(%s)\t", nodes[originElement], cost);
 		}
 		return printFloydPathIndex(originElement,pivot) + printFloydPathIndex(pivot,destinationElement);
-
-		
 	}
 
 
