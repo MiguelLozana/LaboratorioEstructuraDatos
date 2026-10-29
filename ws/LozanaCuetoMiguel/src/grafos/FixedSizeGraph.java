@@ -91,7 +91,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 			}
 		}
 		
-		protected int getValidatedIndexOd(T element) {
+		protected int getValidatedIndexOf(T element) {
 			checkNull(element);
 			int index = find(element);
 			if(index == -1){
@@ -153,8 +153,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	public boolean addEdge(T originElement, T destinationElement, double weight) {
 		checkParam(weight >0 , "El peso ha de ser > 0 ");
 		
-		int originIndex = getValidatedIndexOd(originElement);
-		int destinationIndex = getValidatedIndexOd(destinationElement);
+		int originIndex = getValidatedIndexOf(originElement);
+		int destinationIndex = getValidatedIndexOf(destinationElement);
 		
 		if (!this.edges[originIndex][destinationIndex]) {  //Si no hay arista
 			
@@ -200,8 +200,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	@Override
 	public boolean removeEdge(T originElement, T destinationElement) {
 		
-		int originIndex = getValidatedIndexOd(originElement);
-		int destinationIndex = getValidatedIndexOd(destinationElement);
+		int originIndex = getValidatedIndexOf(originElement);
+		int destinationIndex = getValidatedIndexOf(destinationElement);
 		
 		if (!edges[originIndex][destinationIndex]) {
 			return false;
@@ -244,8 +244,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	@Override
 	public double getWeight(T originElement, T destinationElement) {
 		
-		int originIndex = getValidatedIndexOd(originElement);
-		int destinationIndex = getValidatedIndexOd(destinationElement);
+		int originIndex = getValidatedIndexOf(originElement);
+		int destinationIndex = getValidatedIndexOf(destinationElement);
 			
 		if (existsEdge(originElement,destinationElement)) {
 			return this.weights[originIndex][destinationIndex];
@@ -268,7 +268,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	@Override
 	public DijkstraDataClass dijkstra(T originElement) {
 		
-		int originIndex = getValidatedIndexOd(originElement);
+		int originIndex = getValidatedIndexOf(originElement);
 		DijkstraDataClass dataClass = new DijkstraDataClass(size,this.edges,this.weights,originIndex);
 		boolean[] visited = new boolean[size];
 		visited[originIndex] = true;
@@ -294,7 +294,7 @@ public class FixedSizeGraph<T> implements Graph<T> {
 
 	@Override
 	public double minimumCostPathDijkstra(T originElement, T destinationElement) {
-		int destination = getValidatedIndexOd(destinationElement);
+		int destination = getValidatedIndexOf(destinationElement);
 		return dijkstra(originElement).getDijkstraCostsDValue(destination);
 	}
 	
@@ -381,8 +381,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
   
 	@Override
 	public String printFloydPath(T originElement, T destinationElement) {
-		int origenIndex = getValidatedIndexOd(originElement);
-		int destIndex = getValidatedIndexOd(destinationElement);
+		int origenIndex = getValidatedIndexOf(originElement);
+		int destIndex = getValidatedIndexOf(destinationElement);
 		if ( floydCostsA == null)
 			floyd();
 	
@@ -413,8 +413,8 @@ public class FixedSizeGraph<T> implements Graph<T> {
 
 	@Override
 	public double minimumCostPathFloyd(T originElement, T destinationElement) {
-		int originIndex = getValidatedIndexOd(originElement);
-		int destIndex = getValidatedIndexOd( destinationElement);
+		int originIndex = getValidatedIndexOf(originElement);
+		int destIndex = getValidatedIndexOf( destinationElement);
 		
 		if (floydCostsA == null)
 			floyd();
@@ -427,16 +427,21 @@ public class FixedSizeGraph<T> implements Graph<T> {
 	// ===================================
 	@Override
 	public String printDepthFirstTraversal(T originElement) {
-		int index = getValidatedIndexOd(originElement);
+		int index = getValidatedIndexOf(originElement);
 		boolean[] used = new boolean[size];
 		return  printDepthFirstTraversal( index , used);
 	}
 
+	
+	
 	private  String printDepthFirstTraversal(int element,boolean[] visitados) {
 		String path = nodes[element] + "-";
+		//Marcamos el nodo como visitado 
 		visitados[element] = true;
 		
+		//Recorremos todos los nodos
 		for (int i = 0; i < size; i++) {
+			// Buscamos uno quie NO este vvisitado y tenga arista (sea hijo de element)
 			if (!visitados[i] && edges[element][i]){
 				path +=	printDepthFirstTraversal(i,visitados);
 			}

@@ -1,5 +1,7 @@
 package grafos.ejercicios;
 
+import java.util.ArrayList;
+
 import grafos.DijkstraDataClass;
 import grafos.FixedSizeGraph;
 
@@ -12,7 +14,7 @@ public class EjericiosGrafosImpl<T> extends FixedSizeGraph<T> implements Ejercic
 
 	@Override
 	public double getEccentricity(T element) {
-		int index = getValidatedIndexOd(element);
+		int index = getValidatedIndexOf(element);
 		return(getEccentricity(index));
 	}
 	private double getEccentricity(int element) {
@@ -59,7 +61,7 @@ public class EjericiosGrafosImpl<T> extends FixedSizeGraph<T> implements Ejercic
 		DijkstraDataClass dj =  dijkstra(originElement);
 		int[] path = dj.getDijkstraPathsP();
 		
-		int dest = getValidatedIndexOd(destinationElement); 
+		int dest = getValidatedIndexOf(destinationElement); 
 		int origen = dj.getNodeIndex();
 		
 		return printDijkstraPathRecursive( origen,dest,path);
@@ -78,7 +80,7 @@ public class EjericiosGrafosImpl<T> extends FixedSizeGraph<T> implements Ejercic
 	
 	
 	public String printDijkstraPath2(T originElement, T destinationElement) {
-		int dest = getValidatedIndexOd(destinationElement);
+		int dest = getValidatedIndexOf(destinationElement);
 		DijkstraDataClass dj =  dijkstra(originElement);
 		int origen = dj.getNodeIndex();
 		
@@ -98,9 +100,9 @@ public class EjericiosGrafosImpl<T> extends FixedSizeGraph<T> implements Ejercic
 	}
 	@Override
 	public double getCostBalance(T element) {
-		double balance = 0;;
+		double balance = 0;
 
-		int baseIndex = getValidatedIndexOd(element);
+		int baseIndex = getValidatedIndexOf(element);
 		for (int i=0; i<this.getSize(); i++) {
 			if (getEdges()[i][baseIndex]) {
 				balance += getWeights()[i][baseIndex];
@@ -111,5 +113,65 @@ public class EjericiosGrafosImpl<T> extends FixedSizeGraph<T> implements Ejercic
 		}
 		return balance;
 	}
-
+	
+	/** * Obtiene el coste mínimo del camino desde el origen al destino usando el algoritmo de Dijkstra. 
+	 * @param originElement El nodo de inicio 
+	 * @param destinationElement El nodo de destino 
+	 * @return El coste mínimo, o INFINITO si no existe camino 
+	 * @throws NullPointerException si alguno de los elementos es null 
+	 * @throws ElementNotPresentException si alguno de los nodos no existe en el grafo 
+	 */ 
+	public double minimumCostPathDijkstra(T origen, T destino) {
+		int dest = getValidatedIndexOf(destino); 
+		DijkstraDataClass dj =  dijkstra(origen);
+		
+		return dj.getDijkstraCostsDValue(dest);
+		
+	}
+	/***Devuelve la longitud del camino más corto entre un nodo origen y un nodo destino. 
+	 * @param originElement El nodo de inicio 
+	 * @param destinationElement El nodo de destino 
+	 * @return longitud del camino más corto 
+	 * @throws NullPointerException si alguno de los elementos es null 
+	 * @throws ElementNotPresentException si alguno de los nodos no existe en el grafo */ 
+	public double shortestPathLength (T origenElement, T destino) {
+		DijkstraDataClass dj =  dijkstra(origenElement);
+		int[] path = dj.getDijkstraPathsP();
+		
+		int dest = getValidatedIndexOf(destino); 
+		int origen = dj.getNodeIndex();
+		double counter = 0;
+		
+		return shortestPathLengthRecursive( origen,dest,path,counter);
+	}
+	public double shortestPathLengthRecursive(int originElement, int destinationElement,int[] path,double counter) {
+		if (originElement == destinationElement) {
+			return counter;
+		}
+		int pivote = path[destinationElement];
+		
+		return shortestPathLengthRecursive(originElement,pivote,path,counter+1);
+		
+		
+	}
+	private ArrayList<int[]> Prim(T node) {
+		int graphSize = this.getSize();
+		ArrayList<Integer> nodosUsados = new ArrayList<Integer>();
+		boolean[] visitados = new boolean[this.getSize()];
+		ArrayList<int[]> aristas = new ArrayList<>();
+		
+		
+		int nodeIndex = getValidatedIndexOf(node);
+		while (nodosUsados.size() != graphSize) {
+			double min = Double.POSITIVE_INFINITY;
+			int nodeToGo = -1;
+			for(Integer nodeIndex: nodosUsados) {
+				if (nodeIndex)
+			}
+		}
+		
+		
+		return aristas;
+	}
+	
 }
