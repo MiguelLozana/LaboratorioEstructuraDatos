@@ -50,10 +50,10 @@ class BSTNode<T extends Comparable<T>> implements Comparable<BSTNode<T>>{
 			this.height = 0;
 		}else if (this.left != null && this.right== null ) {
 			this.height = this.left.getHeight()+1;
-		}else if (this.left == null && this.right== null ) {
+		}else if (this.left == null && this.right!= null ) {
 			this.height = this.right.getHeight()+1;
 		}else if (this.left != null && this.right != null ) {
-			this.height = max(this.left.getHeight(),this.left.getHeight()) + 1;
+			this.height = max(this.left.getHeight(),this.right.getHeight()) + 1;
 		}
 		
 	}
