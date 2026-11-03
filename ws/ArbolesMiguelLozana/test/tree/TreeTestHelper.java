@@ -1,4 +1,4 @@
-package arboles;
+package tree;
 
 public class TreeTestHelper {
 
@@ -67,12 +67,25 @@ public class TreeTestHelper {
 	 * @param <T> Type of elements in the tree.
 	 * 
 	 */
-	public static <T extends Comparable<T>> BSTTree<T> createBSTTree(T[] elements) {
-		BSTTree<T> bst = new BSTTree<T>();
+	public static <T extends Comparable<T>> BSTree<T> createBSTree(T[] elements) {
+		BSTree<T> bst = new BSTree<T>();
 		addElementsToTree(bst, elements);
 		return bst;
 	}
 
+	/**
+	 * Helper method to create an AVLTree from an array of elements.
+	 * 
+	 * @param elements Array of elements to add to the AVLTree.
+	 * @return AVLTree containing the added elements.
+	 * @param <T> Type of elements in the tree.
+	 * 
+	 */
+//	public static <T extends Comparable<T>> AVLTree<T> createAVLTree(T[] elements) {
+//		AVLTree<T> avl = new AVLTree<T>();
+//		addElementsToTree(avl, elements);
+//		return avl;
+//	}
 
 	/**
 	 * Helper method to add elements to a tree.

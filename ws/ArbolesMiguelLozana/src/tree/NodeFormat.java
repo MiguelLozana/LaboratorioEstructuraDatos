@@ -1,4 +1,4 @@
-package arboles;
+package tree;
 
 /**
  * Enumeration that defines different formatting strategies for representing
@@ -30,7 +30,7 @@ public enum NodeFormat {
          *         null
          */
         @Override
-        <T extends Comparable<T>> String format(TreeNode<T> node) {
+        <T extends Comparable<T>> String format(BSTNode<T> node) {
             return node == null ? formatNullNode() : formatNodeFromData(node.element);
         }
     },
@@ -50,7 +50,7 @@ public enum NodeFormat {
          *         null
          */
         @Override
-        <T extends Comparable<T>> String format(TreeNode<T> node) {
+        <T extends Comparable<T>> String format(BSTNode<T> node) {
             return node == null ? formatNullNode() : formatNodeFromData(node.element, node.getHeight());
         }
     },
@@ -70,7 +70,7 @@ public enum NodeFormat {
          *         empty braces for null
          */
         @Override
-        <T extends Comparable<T>> String format(TreeNode<T> node) {
+        <T extends Comparable<T>> String format(BSTNode<T> node) {
             return node == null ? formatNullNode()
                     : formatNodeFromData(node.element, node.getHeight(), node.getBalanceFactor());
         }
@@ -86,7 +86,7 @@ public enum NodeFormat {
      * @param node the node to format
      * @return formatted string representation of the node
      */
-    abstract <T extends Comparable<T>> String format(TreeNode<T> node);
+    abstract <T extends Comparable<T>> String format(BSTNode<T> node);
 
     /** Opening delimiter for node representation. */
     private static final String NODE_OPEN = "{";

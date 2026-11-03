@@ -1,13 +1,16 @@
-package arboles;
+package tree;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import tree.BSTree;
+import tree.Tree;
+
 class BSTreeSearchTests {
 
 	private static <T extends Comparable<T>> void testSearchForElements(T[] elementsToAdd, T[] nonExistingElements) {
-		Tree<T> tree = TreeTestHelper.createBSTTree(elementsToAdd);
+		Tree<T> tree = TreeTestHelper.createBSTree(elementsToAdd);
 
 		for (T element : elementsToAdd) {
 			assertTrue(tree.search(element), "Element " + element + " should be found in the tree.");
@@ -69,7 +72,7 @@ class BSTreeSearchTests {
 
 	@Test
 	void searchEmptyTree() {
-		Tree<Integer> tree = new BSTTree<Integer>();
+		Tree<Integer> tree = new BSTree<Integer>();
 
 		assertFalse(tree.search(5));
 		assertFalse(tree.search(0));
@@ -78,7 +81,7 @@ class BSTreeSearchTests {
 
 	@Test
 	void searchNull() {
-		Tree<Integer> tree = new BSTTree<Integer>();
+		Tree<Integer> tree = new BSTree<Integer>();
 
 		assertThrows(NullPointerException.class, () -> tree.search(null));
 

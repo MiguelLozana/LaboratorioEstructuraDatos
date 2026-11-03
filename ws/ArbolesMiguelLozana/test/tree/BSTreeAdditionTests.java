@@ -1,8 +1,12 @@
-package arboles;
+package tree;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
+import tree.BSTree;
+import tree.NodeFormat;
+import tree.Tree;
 
 class BSTreeAdditionTests {
 	
@@ -16,7 +20,7 @@ class BSTreeAdditionTests {
 	@Test
 	void addLeftDegenerateTree() {
 
-		Tree<Integer> tree = new BSTTree<Integer>();
+		Tree<Integer> tree = new BSTree<Integer>();
 
 		testPreorder(tree, new Integer[] { N });
 
@@ -46,7 +50,7 @@ class BSTreeAdditionTests {
 	@Test
 	void addRightDegenerateTree() {
 
-		Tree<Integer> tree = new BSTTree<Integer>();
+		Tree<Integer> tree = new BSTree<Integer>();
 
 		testPreorder(tree, new Integer[] { N });
 
@@ -76,7 +80,7 @@ class BSTreeAdditionTests {
 	@Test
 	void addBalancedTree() {
 
-		Tree<Integer> tree = new BSTTree<Integer>();
+		Tree<Integer> tree = new BSTree<Integer>();
 
 		testPreorder(tree, new Integer[] { N });
 
@@ -106,7 +110,7 @@ class BSTreeAdditionTests {
 	@Test
 	void addUnbalancedLeft() {
 
-		Tree<Integer> tree = new BSTTree<Integer>();
+		Tree<Integer> tree = new BSTree<Integer>();
 
 		tree.add(7);
 		testPreorder(tree, new Integer[] { 7, N, N });
@@ -131,7 +135,7 @@ class BSTreeAdditionTests {
 	@Test
 	void addUnbalancedRight() {
 
-		Tree<Integer> tree = new BSTTree<Integer>();
+		Tree<Integer> tree = new BSTree<Integer>();
 
 		tree.add(3);
 		testPreorder(tree, new Integer[] { 3, N, N });
@@ -154,7 +158,7 @@ class BSTreeAdditionTests {
 
 	@Test
 	void addCharacterTree() {
-		Tree<Character> tree = new BSTTree<Character>();
+		Tree<Character> tree = new BSTree<Character>();
 
 		tree.add('D');
 		testPreorder(tree, new Character[] { 'D', null, null });
@@ -179,7 +183,7 @@ class BSTreeAdditionTests {
 	@Test
 	void addNull() {
 
-		Tree<Integer> tree = new BSTTree<Integer>();
+		Tree<Integer> tree = new BSTree<Integer>();
 
 		assertThrows(NullPointerException.class, () -> tree.add(null));
 
@@ -197,7 +201,7 @@ class BSTreeAdditionTests {
 	@Test
 	void addRepeated() {
 
-		Tree<Integer> tree = new BSTTree<Integer>();
+		Tree<Integer> tree = new BSTree<Integer>();
 		tree.add(5);
 
 		assertThrows(IllegalArgumentException.class, () -> tree.add(5));
