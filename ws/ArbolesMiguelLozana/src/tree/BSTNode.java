@@ -58,16 +58,16 @@ class BSTNode<T extends Comparable<T>> implements Comparable<BSTNode<T>>{
 		
 	}
 	public int getBalanceFactor(){
-		
 		if (this.left == null && this.right== null ) {
 			return 0;
+			
 		}else if (this.left != null && this.right== null ) {
-			return this.right.getHeight();
-		}else if (this.left == null && this.right== null ) {
-			return this.left.getHeight();
+			return -1 - this.left.getHeight();
+			
+		}else if (this.left == null && this.right!= null ) {
+			return this.right.getHeight() + 1;
 		}
 		return this.right.getHeight() -  this.left.getHeight();
-		
 	}
 	private int max(int height1, int height2) {
 		if (height1 > height2) {
@@ -75,6 +75,7 @@ class BSTNode<T extends Comparable<T>> implements Comparable<BSTNode<T>>{
 		}
 		return height2;
 	}
+	
 	
 	
 	//prueba

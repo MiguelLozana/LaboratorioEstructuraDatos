@@ -130,11 +130,7 @@ public class BSTree<T extends Comparable<T>> implements Tree<T>{
 		}
 	}
 	
-	
-	
-	
-	
-	
+
 	
 	@Override
 	public void setRoot(BSTNode<T> root) {
@@ -143,13 +139,21 @@ public class BSTree<T extends Comparable<T>> implements Tree<T>{
 	}
 	@Override
 	public String preorderTraversalHeight() {
-		// TODO Auto-generated method stub
-		return null;
+		return preorderTraversalHeight(this.root);
+	}
+	private String preorderTraversalHeight(BSTNode<T>  node) {
+		if(node == null) {
+			return NodeFormat.HEIGHT.format(node);
+		}
+		String data = NodeFormat.HEIGHT.format(node);
+		data += preorderTraversalHeight(node.getLeft());
+		data += preorderTraversalHeight(node.getRight());
+		return data;
+		
 	}
 	@Override
 	public String preorderTraversalHeightAndBalanceFactor() {
-		// TODO Auto-generated method stub
-		return null;
+		return preorderTraversal(root,NodeFormat.HEIGHT_AND_BALANCE_FACTOR);
 	}
 	
 	/*
