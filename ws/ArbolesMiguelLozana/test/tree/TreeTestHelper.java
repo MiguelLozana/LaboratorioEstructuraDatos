@@ -81,11 +81,11 @@ public class TreeTestHelper {
 	 * @param <T> Type of elements in the tree.
 	 * 
 	 */
-//	public static <T extends Comparable<T>> AVLTree<T> createAVLTree(T[] elements) {
-//		AVLTree<T> avl = new AVLTree<T>();
-//		addElementsToTree(avl, elements);
-//		return avl;
-//	}
+	public static <T extends Comparable<T>> AVLTree<T> createAVLTree(T[] elements) {
+		AVLTree<T> avl = new AVLTree<T>();
+		addElementsToTree(avl, elements);
+		return avl;
+	}
 
 	/**
 	 * Helper method to add elements to a tree.

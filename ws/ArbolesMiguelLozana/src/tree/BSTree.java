@@ -28,7 +28,7 @@ public class BSTree<T extends Comparable<T>> implements Tree<T>{
 		int comparation = element.compareTo(current.element);
 		// RECURSIVO
 		if (comparation == 0)
-			throw new IllegalArgumentException("No elementos duplciados");
+			throw new IllegalArgumentException("No elementos duplicados");
 		else if (comparation < 0) 
 			current.left = add(current.left,element);
 		else 
